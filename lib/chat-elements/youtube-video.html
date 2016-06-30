@@ -1,0 +1,229 @@
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/polymer/polymer.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-slider/paper-slider.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-button/paper-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-icons/iron-icons.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-icons/av-icons.html">
+<dom-module id="youtube-video">
+    <style>
+        .flex-equal-justified {
+            @apply(--layout-horizontal);
+            @apply(--layout-justified);
+        }
+
+        .flex-reversed {
+            @apply(--layout-horizontal-reverse);
+        }
+
+        .white-ink {
+            color: #FFF;
+        }
+
+        .icon-16 {
+            --iron-icon-height: 16px;
+            --iron-icon-width: 16px;
+        }
+
+        .icon-24 {
+            --iron-icon-height: 24px;
+            --iron-icon-width: 24px;
+        }
+
+        .icon-32 {
+            --iron-icon-height: 32px;
+            --iron-icon-width: 32px;
+        }
+
+        .icon-48 {
+            --iron-icon-height: 48px;
+            --iron-icon-width: 48px;
+        }
+
+        .icon-red {
+            fill: red;
+            color: red;
+        }
+
+        .button-icon-ww {
+            --paper-icon-button-ink-color: #FFF;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .youtubeVideo {
+            height: 54px;
+            width: 246px;
+            position: relative;
+            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .videoPreview {
+            width: inherit;
+            height: inherit;
+            cursor: pointer;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .thumb {
+            width: 96px;
+            height: 54px;
+            background-size: contain;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-color: #000;
+            float: left;
+        }
+
+        .showLabel {
+            width: 140px;
+            height: 24px;
+            font-size: 14px;
+            margin-top: 14px;
+            margin-left: 2px;
+            text-align: center;
+            float: left;
+            vertical-align: middle;
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        .showLabel span {
+            width: 100%;
+            height: 24px;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        .youtubeFrame,
+        .youtubeEmbed {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: block;
+        }
+
+        .windowControls {
+            height: 40px;
+            width: 90px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 9999999;
+            opacity: 1;
+        }
+
+        .youtubeCloseButton,
+        .youtubeToggleSize {
+            display: inline-block;
+            float: right;
+            margin-left: 5px;
+        }
+    </style>
+    <template>
+       <div id="ytv" class="youtubeVideo" data-size="small">
+          <paper-ripple class="white-ink"></paper-ripple>
+          <div class="videoPreview">
+             <div class="thumb"></div>
+             <div class="showLabel">
+                <iron-icon class="icon-24 icon-red" icon="av:play-circle-filled"></iron-icon>
+                <span>Visualizza Video</span>
+             </div>
+          </div>
+          <div id="youtubeEmbed" class="youtubeEmbed">
+             <iframe class="youtubeFrame" id="yt" type="text/html" width="100%" height="100%" src="//www.youtube.com/embed/[[vid]]?&theme=light&controls=2&modestbranding=1&rel=0&showinfo=0&autohide=1&iv_load_policy=3" frameborder="0"></iframe>
+             <div class="windowControls flex-reversed">
+                <paper-icon-button icon="icons:close" class="youtubeCloseButton button-icon-ww" mini></paper-icon-button>
+                <paper-icon-button icon="icons:fullscreen" class="youtubeToggleSize button-icon-ww" mini></paper-icon-button>
+             </div>
+          </div>
+       </div>
+    </template>
+</dom-module>
+<style is="custom-style" include="youtube-video"></style>
+<script>
+    Polymer({
+       is: 'youtube-video',
+       ready: function() {
+          this._loadVideo();
+       },
+       properties: {
+          vid: {
+             type: String,
+             value: true
+          }
+       },
+       _loadVideo: function() {
+          self = this;
+          var ytv = self.$.ytv;
+          var thumbURL = 'https://i3.ytimg.com/vi/' + this.vid + '/mqdefault.jpg';
+          var youtubeVideo = $(ytv);
+          var youtubeEmbed = youtubeVideo.find(".youtubeEmbed");
+          var windowControls = youtubeVideo.find(".windowControls");
+
+          youtubeEmbed.hide();
+
+          youtubeVideo.find('.thumb').css({
+             'background-image': 'url(' + thumbURL + ')'
+          });
+          windowControls.find('.youtubeCloseButton').bind('click', function() {
+             event.stopPropagation();
+             youtubeVideo.css({
+                'height': '54px',
+                'width': '246px'
+             });
+             youtubeVideo.find('.videoPreview').show();
+             youtubeVideo.find('.youtubeEmbed').hide(200, function() {
+                $(this).appendTo($(this).parent());
+             });
+          });
+          windowControls.find('.youtubeToggleSize').bind('click', function(event) {
+             event.stopPropagation();
+             if (youtubeVideo.attr('data-size') == 'small') {
+                youtubeVideo.attr('data-size', 'big');
+                youtubeVideo.css({
+                   'height': '720px',
+                   'width': '1280px'
+                });
+                $(this).attr('icon', 'icons:fullscreen-exit');
+             } else {
+                youtubeVideo.attr('data-size', 'small');
+                youtubeVideo.css({
+                   'height': '360px',
+                   'width': '640px'
+                });
+                $(this).attr('icon', 'icons:fullscreen');
+             }
+             $(this)
+          });
+          youtubeVideo.bind('click', function(event) {
+             var that = $(this);
+             that.css({
+                'width': 640,
+                'height': 360
+             });
+             youtubeVideo.attr('data-size', 'small');
+             youtubeVideo.find('.youtubeToggleSize').attr('icon', 'icons:fullscreen');
+             that.find('.videoPreview').hide();
+             that.find('.youtubeEmbed').show();
+
+          });
+
+          youtubeEmbed.bind('mouseenter', function() {
+             windowControls.stop(1, 1).fadeIn(150);
+          });
+          youtubeEmbed.bind('mouseleave', function() {
+             windowControls.stop(1, 1).fadeOut(150);
+          });
+       }
+    });
+</script>

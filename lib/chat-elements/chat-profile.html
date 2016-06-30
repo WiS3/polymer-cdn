@@ -1,0 +1,171 @@
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/polymer/polymer.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-button/paper-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-fab/paper-fab.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-image/iron-image.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-iconset-svg/chat-icons.html">
+<dom-module id="chat-profile">
+    <style>
+      .flex-equal-around-justified {
+        @apply(--layout-horizontal);
+        @apply(--layout-around-justified);
+      }
+      
+      .flex-equal-justified {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
+      
+      .white-ink {
+        color: #FFF;
+      }
+      
+      .icon-16 {
+        --iron-icon-height: 16px;
+        --iron-icon-width: 16px;
+      }
+      
+      .icon-20 {
+        --iron-icon-height: 20px;
+        --iron-icon-width: 20px;
+      }
+      
+      .icon-24 {
+        --iron-icon-height: 24px;
+        --iron-icon-width: 24px;
+      }
+      
+      .icon-32 {
+        --iron-icon-height: 32px;
+        --iron-icon-width: 32px;
+      }
+      
+      .icon-48 {
+        --iron-icon-height: 48px;
+        --iron-icon-width: 48px;
+      }
+      
+      .icon-white {
+        fill: #fff;
+      }
+      
+      .icon-grey {
+        fill: #666;
+      }
+      
+      .icon-mediumgrey {
+        fill: #888;
+      }
+      
+      .icon-lightgrey {
+        fill: #999;
+      }
+      
+      .icon-blue {
+        fill: #00AAFF;
+      }
+      
+      .icon-red {
+        fill: red;
+      }
+      
+      .button-icon-ww {
+        --paper-icon-button-ink-color: #FFF;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      
+      #placeholder {
+        width: 48px;
+        height: 15px;
+        margin: 0 auto;
+        top: 50%;
+        margin-top: -7px;
+      }
+      
+      paper-fab.blue {
+        --paper-fab-background: #00aaff;
+        --paper-fab-keyboard-focus-background: #00aaff;
+      }
+      
+      paper-fab.orange {
+        --paper-fab-background: var(--paper-orange-500);
+        --paper-fab-keyboard-focus-background: var(--paper-orange-900);
+      }
+      
+      paper-fab.purple {
+        --paper-fab-background: #aa00ff;
+        --paper-fab-keyboard-focus-background: #aa00ff;
+      }
+      
+      paper-fab.green {
+        --paper-fab-background: #64C428;
+        --paper-fab-keyboard-focus-background: #64C428;
+      }
+      paper-fab.red {
+        --paper-fab-background: #FF0000;
+        --paper-fab-keyboard-focus-background: #FF0000;
+      }
+      
+      .fab-tooltip {
+        top: -30px !important;
+        --paper-tooltip-background: #000;
+        --paper-tooltip-opacity: 0.9;
+      }
+
+    </style>
+  <template>
+  <paper-material class="profileContainer">
+  <iron-image class="profileCover" sizing="cover" preload fade src="http://media.digitalcameraworld.com/wp-content/uploads/sites/123/2013/03/norway_lofoten_haukland_01_DCW.jpg"></iron-image>
+  <div class="profileWrapper">
+    <paper-material class="avatarContainer">
+      <iron-image class="profileAvatar" sizing="contain" preload fade src="https://chat.fr0z3n.cf/getMedia.php?type=avatar&id=4b3dd7b72ec028b107d1f1d62446acdd"></iron-image>
+    </paper-material>
+    <div class="profileUserData">
+      <div class="userStatus statusOnline"></div>
+      <span class="profileNickname">Fr0z3n</span>
+      <div class="profileUserLevelContainer">
+        <iron-icon class="userLevelBadge icon-20 adminBadge" icon="chat:verified-user"></iron-icon>
+        <span class="profileUserLevel">Admin</span>
+      </div>
+      <div class="profileInfoContainer">
+        <iron-icon class="genderIcon icon-20 icon-mediumgrey" icon="chat:male"></iron-icon>
+        <span class="profileGender">Uomo</span>
+        <iron-icon class="ageIcon icon-20 icon-mediumgrey" icon="chat:age"></iron-icon>
+        <span class="profileAge">25</span>
+        <iron-icon class="locationIcon icon-20 icon-mediumgrey" icon="chat:location"></iron-icon>
+        <span class="profileLocation">Città, Regione</span>
+      </div>
+    </div>
+  </div>
+  <div class="userActions flex-equal-around-justified">
+    <div class="fab-container">
+      <paper-fab icon="chat:public-message" class="blue"></paper-fab>
+      <paper-tooltip class="fab-tooltip" position="top">Messaggio Publico</paper-tooltip>
+    </div>
+    <div class="fab-container">
+      <paper-fab icon="chat:private-message" class="purple"></paper-fab>
+      <paper-tooltip class="fab-tooltip" position="top">Messaggio Privato</paper-tooltip>
+    </div>
+    <div class="fab-container">
+      <paper-fab icon="chat:friend-border" class="green"></paper-fab>
+      <paper-tooltip class="fab-tooltip" position="top">Aggiungi agli Amici</paper-tooltip>
+    </div>
+    <div class="fab-container">
+      <paper-fab icon="chat:block" class="red"></paper-fab>
+      <paper-tooltip class="fab-tooltip" position="top">Blocca</paper-tooltip>
+    </div>
+    <div class="fab-container">
+      <paper-fab icon="chat:profile" class="orange"></paper-fab>
+      <paper-tooltip class="fab-tooltip" position="top">Profilo completo</paper-tooltip>
+    </div>
+  </div>
+</paper-material>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'chat-profile'
+  });
+</script>

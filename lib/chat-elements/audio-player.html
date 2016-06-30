@@ -1,0 +1,335 @@
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/polymer/polymer.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-button/paper-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-fab/paper-fab.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-slider/paper-slider.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-image/iron-image.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-icons/av-icons.html">
+<script src="https://chat.socializr.it/js/wavesurfer.min.js?v=0.6" type="text/javascript"></script>
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-iconset-svg/chat-icons.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/neon-animation/neon-animations.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/neon-animation/neon-animated-pages.html">
+<dom-module id="audio-player">
+  <style>
+    .flex-center {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+
+    .flex-horizontal {
+      @apply(--layout-horizontal);
+    }
+
+    .layout-justified {
+      @apply(--layout-justified);
+    }
+
+    .flex-vertical {
+      @apply(--layout-vertical);
+    }
+
+    paper-slider.dynamic {
+      --paper-slider-knob-color: #FFF;
+      --paper-slider-active-color: rgba(255, 255, 255, 0.66);
+      --paper-slider-pin-color: #FFF;
+      --paper-slider-font-color: #000;
+      --paper-slider-knob-start-border-color: rgba(255,255,255, 0.33);
+    }
+
+    paper-fab.dynamic {
+      --paper-fab-background: rgba(255, 255, 255, 0.22);
+      --paper-fab-keyboard-focus-background: rgba(255, 255, 255, 0.22);
+      --paper-fab-disabled-background: rgba(255, 255, 255, 0.22);
+      --paper-fab-disabled-text: rgba(255, 255, 255, 0.5);
+    }
+
+    paper-slider::shadow #sliderContainer {
+      margin-top: -1px !important;
+      margin-right: 4px !important;
+    }
+
+    paper-slider::shadow #progressContainer {
+      background-color: rgba(255, 255, 255, 0.33) !important;
+    }
+
+    paper-slider::shadow #sliderKnobInner {
+      width: 11px !important;
+      height: 11px !important;
+    }
+
+    .noShadow {
+      @apply(--shadow-none);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        vertical-align: baseline;
+    }
+
+    .audioPlayersContainer {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+
+    .fcAudioPlayer {
+        width: 315px;
+        height: 50px;
+        background: #03a9f4;
+        margin-bottom: 5px;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+        font-size: 12px;
+        font-family: 'Roboto', 'Tahoma', sans-serif;
+    }
+
+    .playPauseButton {
+        margin: 5px !important;
+        padding: 0px !important;
+    }
+
+    .waveformContainer {
+        width: 260px;
+        height: 26px;
+        margin: 6px 0 3px 0;
+        cursor: pointer;
+    }
+
+    .waveForm {
+        width: 260px;
+        height: 36px;
+        opacity: 0;
+    }
+
+    .fCurrentTime {
+        opacity: 0;
+        color: rgba(255, 255, 255, 0.88);
+    }
+
+    .progressText {
+      color: rgba(255,255,255,0.88);
+    }
+
+    #progressContainer {
+        width: 100%;
+    }
+
+    .progressBar {
+      margin-top:3px;
+      height:5px;
+      width:100%;
+      background-color: rgba(255,255,255,0.15);
+    }
+
+    #progress {
+      background-color: rgba(255,255,255,0.88);
+      height:100%;
+      width: 0%;
+    }
+
+    .volumeSlider {
+      width: 150px;
+      z-index: 99;
+    }
+  </style>
+  <template>
+    <paper-material elevation="0">
+      <div class="fcAudioPlayer flex-horizontal" style="background-color:[[color]]">
+        <paper-fab mini elevation="0" disabled="[[disabled]]" id="playPauseButton" icon="av:play-arrow" class="dynamic noShadow playPauseButton" on-tap="_onPlayPauseClick">
+        </paper-fab>
+        <div class="flex-vertical">
+          <div class="waveformContainer">
+            <div id="progressContainer">
+              <div class="progressText">[[progressText]]</div>
+              <div class="progressBar">
+                <div id="progress"></div>
+              </div>
+            </div>
+            <div id="waveForm" class="waveForm"></div>
+          </div>
+          <div class="controlsContainer flex-horizontal layout-justified">
+            <div id="fCurrentTime" class="fCurrentTime self-start">[[fCurrentTime]]</div>
+            <paper-slider pin id="volumeSlider" class="dynamic volumeSlider self-end" value="100" max="100"></paper-slider>
+          </div>
+        </div>
+      </div>
+    </paper-material>
+  </template>
+</dom-module>
+<script>
+Polymer({
+   is: 'audio-player',
+   ready: function() {
+     this._loadFile();
+   },
+   properties: {
+     playerStopped: {
+       type: Boolean,
+       value: true
+     },
+     disabled: {
+     	 type: Boolean,
+       value: true
+     },
+     fCurrentTime: {
+       type: String,
+       value: ''
+     },
+     currentVolume: {
+       type: Number,
+       value: 1
+     },
+     id: {
+       type: String,
+       value: 'default'
+     },
+     progressText: {
+     	type: String,
+      value: 'Caricamento: 0%'
+     },
+     color: {
+     	type: String,
+      vaue: "#BBB"
+     }
+   },
+   _loadFile: function() {
+     var self = this;
+     //var baseUrl = "https://chat.fr0z3n.cf/getMedia.php?type=audio&id=";
+     var baseUrl = "https://chat.socializr.it/getMedia.php?type=audio&id=";
+     this.$.waveForm.addEventListener('contextmenu', function(ev) {
+       ev.preventDefault();
+       return false;
+     }, false);
+     self.player = WaveSurfer.create({
+       container: this.$.waveForm,
+       waveColor: 'rgba(255, 255, 255, 0.44)',
+       normalize: true,
+       progressColor: 'rgba(255, 255, 255, 0.88)',
+       cursorWidth: 0,
+       cursorColor: '#fff',
+       barWidth: 2,
+       height: 26
+     });
+     self.player.load(baseUrl + self.id);
+     self.player.on('ready', function() {
+       var volumeSlider = self.$.volumeSlider;
+       volumeSlider.addEventListener('value-change', function() {
+       	var volFraction = parseInt(volumeSlider.value) / parseInt(volumeSlider.max);
+       	self.currentVolume = volFraction * volFraction;
+        self.player.setVolume(self.currentVolume);
+       });
+       volumeSlider.addEventListener('immediate-value-change', function() {
+       	var volFraction = parseInt(volumeSlider.immediateValue) / parseInt(volumeSlider.max);
+       	self.currentVolume = volFraction * volFraction;
+        self.player.setVolume(self.currentVolume);
+       });
+       console.log('Player Ready!');
+       $(self.$.progressContainer).remove();
+       $(self.$.waveForm).fadeTo(250, 1);
+       $(self.$.fCurrentTime).fadeTo(250, 1);
+       self.disabled = false;
+       self.$.playPauseButton.icon = 'av:play-arrow';
+       self.fCurrentTime = self._getFormattedTime(self.player.getDuration());
+     });
+     self.player.on('seek', function(progress) {
+     		if(progress < 0){
+        	self.player.seekTo(0);
+        }
+       self._updateTime();
+     });
+     self.player.on('finish', function() {
+       self.player.stop();
+       self.playerStopped = true;
+       self._stopInterval();
+       self.fCurrentTime = self._getFormattedTime(self.player.getDuration());
+       self.$.playPauseButton.icon = 'av:play-arrow';
+     });
+
+     self.player.on('loading', function(progress) {
+     	 $(self.$.progress).css({'width':progress+'%'});
+     	 self.progressText = 'Caricamento: ' + progress + '%';
+       console.log('Loading Audio: ' + progress + '%');
+     });
+   },
+   _onPlayPauseClick: function() {
+     var self = this;
+     if(self.playerStopped){
+         self.player.play();
+         self._startInterval();
+         self.$.playPauseButton.icon = 'av:pause';
+         self.playerStopped = false;
+     }else{
+       if(self.player.isPlaying()){
+				self._audioFadeOut();
+       }else{
+       	self._audioFadeIn();
+       }
+     }
+   },
+   _audioFadeOut: function() {
+     var self = this;
+     if (self.player) {
+       var _start = {
+         property: self.currentVolume
+       };
+       var _end = {
+         property: 0
+       };
+       jQuery(_start).animate(_end, {
+         duration: 200,
+         step: function() {
+           self.player.setVolume(this.property);
+         },
+         complete: function() {
+           self.player.pause();
+           self._stopInterval();
+           self.$.playPauseButton.icon = 'av:play-arrow';
+         }
+       });
+     }
+   },
+   _audioFadeIn: function() {
+     var self = this;
+     if (self.player) {
+       self.player.play();
+       self._startInterval();
+       self.$.playPauseButton.icon = 'av:pause';
+       var _start = {
+         property: 0
+       };
+       var _end = {
+         property: self.currentVolume
+       };
+       jQuery(_start).animate(_end, {
+         duration: 200,
+         step: function() {
+           self.player.setVolume(this.property);
+         }
+       });
+     }
+   },
+   _getFormattedTime: function(input) {
+     var self = this;
+     var minutes = Math.floor(input / 60);
+     var seconds = Math.floor(input) % 60;
+     return (minutes < 10 ? '0' : '') + minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+   },
+   _updateTime: function() {
+     var self = this;
+     self.fCurrentTime = self._getFormattedTime(self.player.getCurrentTime()) + '/' + self._getFormattedTime(self.player.getDuration());
+   },
+   _startInterval: function() {
+     var self = this;
+     self.fCurrentTime = self._getFormattedTime(self.player.getCurrentTime()) + '/' + self._getFormattedTime(self.player.getDuration());
+     timeInterval = setInterval(function() {
+       self._updateTime();
+     }, 100);
+   },
+   _stopInterval: function() {
+     clearInterval(timeInterval);
+   }
+ });
+</script>
