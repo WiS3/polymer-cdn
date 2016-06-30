@@ -14,28 +14,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!--
 Material design: [Checkbox](https://www.google.com/design/spec/components/selection-controls.html#selection-controls-checkbox)
-
 `paper-checkbox` is a button that can be either checked or unchecked.  User
 can tap the checkbox to check or uncheck it.  Usually you use checkboxes
 to allow user to select multiple options from a set.  If you have a single
 ON/OFF option, avoid using a single checkbox and use `paper-toggle-button`
 instead.
-
 Example:
-
     <paper-checkbox>label</paper-checkbox>
-
     <paper-checkbox checked> label</paper-checkbox>
-
 ### Styling
-
 The following custom properties and mixins are available for styling:
-
 Custom property | Description | Default
 ----------------|-------------|----------
 `--paper-checkbox-unchecked-background-color` | Checkbox background color when the input is not checked | `transparent`
 `--paper-checkbox-unchecked-color` | Checkbox border color when the input is not checked | `--primary-text-color`
 `--paper-checkbox-unchecked-ink-color` | Selected/focus ripple color when the input is not checked | `--primary-text-color`
+`--paper-checkbox-checked-background-color` | Checkbox background color when the input is checked | `--default-primary-color`, `--primary-color`
 `--paper-checkbox-checked-color` | Checkbox color when the input is checked | `--primary-color`
 `--paper-checkbox-checked-ink-color` | Selected/focus ripple color when the input is checked | `--primary-color`
 `--paper-checkbox-checkmark-color` | Checkmark color | `white`
@@ -46,10 +40,8 @@ Custom property | Description | Default
 `--paper-checkbox-size` | Size of the checkbox | `18px`
 `--paper-checkbox-margin` | Margin around the checkbox container | `initial`
 `--paper-checkbox-vertical-align` | Vertical alignment of the checkbox container | `middle`
-
 This element applies the mixin `--paper-font-common-base` but does not import `paper-styles/typography.html`.
 In order to apply the `Roboto` font to this element, make sure you've imported `paper-styles/typography.html`.
-
 @demo demo/index.html
 -->
 
@@ -64,15 +56,12 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         @apply(--paper-font-common-base);
         line-height: 0;
       }
-
       :host(:focus) {
         outline: none;
       }
-
       .hidden {
         display: none;
       }
-
       #checkboxContainer {
         display: inline-block;
         position: relative;
@@ -83,10 +72,8 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         vertical-align: var(--paper-checkbox-vertical-align, middle);
         background-color: var(--paper-checkbox-unchecked-background-color, transparent);
       }
-
       #ink {
         position: absolute;
-
         /* Center the ripple in the checkbox by negative offsetting it by
          * (inkWidth - rippleWidth) / 2 */
         top: calc(0px - (2.66 * var(--calculated-paper-checkbox-size) - var(--calculated-paper-checkbox-size)) / 2);
@@ -97,16 +84,13 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         opacity: 0.6;
         pointer-events: none;
       }
-
       :host-context([dir="rtl"]) #ink {
         right: calc(0px - (2.66 * var(--calculated-paper-checkbox-size) - var(--calculated-paper-checkbox-size)) / 2);
         left: auto;
       }
-
       #ink[checked] {
         color: var(--paper-checkbox-checked-ink-color, --primary-color);
       }
-
       #checkbox {
         position: relative;
         box-sizing: border-box;
@@ -118,13 +102,11 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         -webkit-transition: background-color 140ms, border-color 140ms;
         transition: background-color 140ms, border-color 140ms;
       }
-
       /* checkbox checked animations */
       #checkbox.checked #checkmark {
         -webkit-animation: checkmark-expand 140ms ease-out forwards;
         animation: checkmark-expand 140ms ease-out forwards;
       }
-
       @-webkit-keyframes checkmark-expand {
         0% {
           -webkit-transform: scale(0, 0) rotate(45deg);
@@ -133,7 +115,6 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           -webkit-transform: scale(1, 1) rotate(45deg);
         }
       }
-
       @keyframes checkmark-expand {
         0% {
           transform: scale(0, 0) rotate(45deg);
@@ -142,12 +123,10 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           transform: scale(1, 1) rotate(45deg);
         }
       }
-
       #checkbox.checked {
-        background-color: var(--paper-checkbox-checked-color, --primary-color);
+        background-color: var(--paper-checkbox-checked-background-color, var(--paper-checkbox-checked-color, --primary-color));
         border-color: var(--paper-checkbox-checked-color, --primary-color);
       }
-
       #checkmark {
         position: absolute;
         width: 36%;
@@ -162,12 +141,10 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         transform-origin: 97% 86%;
         box-sizing: content-box; /* protect against page-level box-sizing */
       }
-
       :host-context([dir="rtl"]) #checkmark {
         -webkit-transform-origin: 50% 14%;
         transform-origin: 50% 14%;
       }
-
       /* label */
       #checkboxLabel {
         position: relative;
@@ -178,36 +155,28 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         line-height: normal;
         color: var(--paper-checkbox-label-color, --primary-text-color);
       }
-
       :host([checked]) #checkboxLabel {
         color: var(--paper-checkbox-label-checked-color, --paper-checkbox-label-color);
       }
-
       :host-context([dir="rtl"]) #checkboxLabel {
         padding-right: var(--paper-checkbox-label-spacing, 8px);
         padding-left: 0;
       }
-
       #checkboxLabel[hidden] {
         display: none;
       }
-
       /* disabled state */
-
       :host([disabled]) #checkbox {
         opacity: 0.5;
         border-color: var(--paper-checkbox-unchecked-color, --primary-text-color);
       }
-
       :host([disabled][checked]) #checkbox {
         background-color: var(--paper-checkbox-unchecked-color, --primary-text-color);
         opacity: 0.5;
       }
-
       :host([disabled]) #checkboxLabel  {
         opacity: 0.65;
       }
-
       /* invalid state */
       #checkbox.invalid:not(.checked) {
         border-color: var(--paper-checkbox-error-color, --error-color);
@@ -226,24 +195,20 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
   <script>
     Polymer({
       is: 'paper-checkbox',
-
       behaviors: [
         Polymer.PaperCheckedElementBehavior
       ],
-
       hostAttributes: {
         role: 'checkbox',
         'aria-checked': false,
         tabindex: 0
       },
-
       properties: {
         /**
          * Fired when the checked state changes due to user interaction.
          *
          * @event change
          */
-
         /**
          * Fired when the checked state changes.
          *
@@ -254,7 +219,6 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
           value: 'aria-checked'
         }
       },
-
       _computeCheckboxClass: function(checked, invalid) {
         var className = '';
         if (checked) {
@@ -265,17 +229,14 @@ In order to apply the `Roboto` font to this element, make sure you've imported `
         }
         return className;
       },
-
       _computeCheckmarkClass: function(checked) {
         return checked ? '' : 'hidden';
       },
-
       // create ripple inside the checkboxContainer
       _createRipple: function() {
         this._rippleContainer = this.$.checkboxContainer;
         return Polymer.PaperInkyFocusBehaviorImpl._createRipple.call(this);
       }
-
     });
   </script>
 </dom-module>
