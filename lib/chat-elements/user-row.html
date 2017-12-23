@@ -40,15 +40,14 @@
       <paper-ripple class="userRowRipple" initial-opacity="0.5" hidden$="{{!rippleEnabled}}" fit></paper-ripple>
       <div class="userRow flex-horizontal">
         <div class="flex-center flexchild rel">
+	  <iron-image class="userRowAvatar" sizing="contain" preload fade src="{{_userAvatar}}"></iron-image>
           <div class$="userRowStatus {{_statusClass}}">
             <paper-tooltip class="status-tooltip" position="right">{{_statusString}}</paper-tooltip>
           </div>
           <span class$="userRowNickname {{_nicknameClass}}">{{nickname}}</span>
         </div>
         <div class="flex-end rel">
-          
           <paper-icon-button icon="chat:cam-mic" class="userRowAv" on-mouseenter="_onAvEnter" on-mouseleave="_onAvLeave" on-tap="_onAvClick"></paper-icon-button>
-          <iron-image class="userRowAvatar" sizing="contain" preload fade src="{{_userAvatar}}"></iron-image>
           <div class$="userRowGender {{_genderClass}}"></div>
         </div>
       </div>
@@ -188,15 +187,3 @@
     });
 
 </script>
-<div class="usersListContaianer">
-  <user-row nickname="Bot_" status="online" avatar="4b3dd7b72ec028b107d1f1d62446acdd" level="bot"></user-row>
-  <user-row nickname="Username_Unknown_Online" status="online"></user-row>
-  <user-row nickname="Username_Male_Busy" gender="male" status="away"></user-row>
-  <user-row nickname="Username_Male_Away" gender="male" status="away"></user-row>
-  <user-row nickname="Username_Female_Busy" gender="female" status="busy"></user-row>
-  <user-row nickname="Username_Female_Away" gender="female" status="busy"></user-row>
-</div>
-
-
-<!-- -->
-<!-- -->
