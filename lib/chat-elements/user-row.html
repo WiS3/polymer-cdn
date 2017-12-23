@@ -33,33 +33,8 @@
       left: 23px ! important;
       --paper-tooltip-background: rgba(0, 0, 0, 0.9);
       --paper-tooltip-opacity: 1;     
-    }
-    
-
-
-  </style>
-  <template>
-    <paper-material elevation="0">
-      <paper-ripple class="userRowRipple" initial-opacity="0.5" hidden$="{{!rippleEnabled}}" fit></paper-ripple>
-      <div class="userRow flex-horizontal">
-        <div class="flex-center flexchild rel">
-          <div class$="userRowStatus {{_statusClass}}">
-            <paper-tooltip class="status-tooltip" position="right">{{_statusString}}</paper-tooltip>
-          </div>
-          <span class$="userRowNickname {{_nicknameClass}}">{{nickname}}</span>
-        </div>
-        <div class="flex-end rel">
-          
-          <paper-icon-button icon="chat:cam-mic" class="userRowAv" on-mouseenter="_onAvEnter" on-mouseleave="_onAvLeave" on-tap="_onAvClick"></paper-icon-button>
-          <iron-image class="userRowAvatar" sizing="contain" preload fade src="{{_userAvatar}}"></iron-image>
-          <div class$="userRowGender {{_genderClass}}"></div>
-        </div>
-      </div>
-    </paper-material>
-  </template>
-</dom-module>
-<style is="custom-style" include="user-row">
-
+	}
+	  
 .userRow {
   width: 100%;
   height: 30px;
@@ -192,7 +167,29 @@
 	content: " ";
 	height: 0;
 }
-</style>
+
+  </style>
+  <template>
+    <paper-material elevation="0">
+      <paper-ripple class="userRowRipple" initial-opacity="0.5" hidden$="{{!rippleEnabled}}" fit></paper-ripple>
+      <div class="userRow flex-horizontal">
+        <div class="flex-center flexchild rel">
+          <div class$="userRowStatus {{_statusClass}}">
+            <paper-tooltip class="status-tooltip" position="right">{{_statusString}}</paper-tooltip>
+          </div>
+          <span class$="userRowNickname {{_nicknameClass}}">{{nickname}}</span>
+        </div>
+        <div class="flex-end rel">
+          
+          <paper-icon-button icon="chat:cam-mic" class="userRowAv" on-mouseenter="_onAvEnter" on-mouseleave="_onAvLeave" on-tap="_onAvClick"></paper-icon-button>
+          <iron-image class="userRowAvatar" sizing="contain" preload fade src="{{_userAvatar}}"></iron-image>
+          <div class$="userRowGender {{_genderClass}}"></div>
+        </div>
+      </div>
+    </paper-material>
+  </template>
+</dom-module>
+<style is="custom-style" include="user-row"></style>
 <script>
     var validValue = function(value) {
       if (value == !1 || value == '' || value === undefined || value === null) {
