@@ -1,0 +1,339 @@
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/polymer/polymer.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-button/paper-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/paper-fab/paper-fab.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-image/iron-image.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/iron-iconset-svg/chat-icons.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/neon-animation/neon-animations.html">
+<link rel="import" href="https://rawgit.com/WiS3/polymer-cdn/master/lib/neon-animation/neon-animated-pages.html">
+<dom-module id="user-row">
+  <style>
+    .flex-center {
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+    
+    .flex-end {
+      @apply(--layout-center);
+      @apply(--layout-horizontal);
+      @apply(--layout-end-justified);
+    }
+    
+    .flex-horizontal {
+      @apply(--layout-horizontal);
+    }
+    
+    .flexchild {
+      @apply(--layout-flex);
+    }
+    
+    .status-tooltip {
+      left: 23px ! important;
+      --paper-tooltip-background: rgba(0, 0, 0, 0.9);
+      --paper-tooltip-opacity: 1;     
+    }
+    
+
+
+  </style>
+  <template>
+    <paper-material elevation="0">
+      <paper-ripple class="userRowRipple" initial-opacity="0.5" hidden$="{{!rippleEnabled}}" fit></paper-ripple>
+      <div class="userRow flex-horizontal">
+        <div class="flex-center flexchild rel">
+          <div class$="userRowStatus {{_statusClass}}">
+            <paper-tooltip class="status-tooltip" position="right">{{_statusString}}</paper-tooltip>
+          </div>
+          <span class$="userRowNickname {{_nicknameClass}}">{{nickname}}</span>
+        </div>
+        <div class="flex-end rel">
+          
+          <paper-icon-button icon="chat:cam-mic" class="userRowAv" on-mouseenter="_onAvEnter" on-mouseleave="_onAvLeave" on-tap="_onAvClick"></paper-icon-button>
+          <iron-image class="userRowAvatar" sizing="contain" preload fade src="{{_userAvatar}}"></iron-image>
+          <div class$="userRowGender {{_genderClass}}"></div>
+        </div>
+      </div>
+    </paper-material>
+  </template>
+</dom-module>
+<style is="custom-style" include="user-row">
+
+.userRow {
+  width: 100%;
+  height: 30px;
+  background: transparent;
+  transition: all .1s ease;
+  cursor: pointer;
+  margin-bottom: 1px;
+}
+
+.userRow:after {
+    content: '';
+    height: 1px;
+    width: 100%;
+    display: block;
+    position: absolute;
+    background: #E8E8E8;
+    left: 0;
+    bottom: -1px;
+}
+
+.rel {
+  position: relative;
+}
+
+.userRow:hover {
+  background: #EEE;
+}
+
+.userRowRipple {
+  color: #D0D0D0;
+}
+
+.userRowAvatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  margin-left: 3px;
+}
+
+.userRowGender {
+  width: 5px;
+  height:100%;
+  margin-left:3px;
+}
+
+.userRowGenderMale {
+  background-color: #00bbff;
+}
+.userRowGenderFemale {
+  background-color: #ffafff;
+}
+.userRowGenderUnknown {
+  background-color: #dddddd;
+}
+
+.userRowAvatar #placeholder {
+  border-radius: 50%;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAPFBMVEXa2tr////c3NzS0tLW1tbU1NT8/Pzz8/Pe3t719fX39/fv7+/t7e3g4ODo6Ojm5ubq6urk5OT5+fni4uL0nt6SAAADAklEQVR42u3aC66bMBCFYR+fM7aB8Mz+99pWrXRV3TQBxiaqlH8DfNLYgDChxLdWwtuL4a3FD+AD+AA+gA/gA/gAnAD96k0A0RRCjCHIaLoWIJrGaei29LOtz8sajHYZwBinocdfpXwbRV0BMJVbwqO6NVCtAeLY4Z+lRWwKEOOAp/WrWTuAbMbLhsBWAFPGnka2ATBu2NdENQCwJOztRlUHsABwCLwARuCYoC7AtOFYM6sC2OFoxSoCeMPhklQNYBEnurEeoMOZRqsE4IxTdawEsB7nGq0KgHecrK8DUI+zFasAsILTLawA4ITTJckPUI/zreYGqMDRQDeAExxlcwNsgKNNfkCGpyIvQB083c0N6OFp9gIUEzwtfDPg9gG4AcG7Bv73XeC9Ed39gAGeorwA3uCor/AsWN/8NFTw7UIXwL8KR/MD6JhBb8EPUMTpZroA/hlEVQFE1yupHxCYca6gOgAbcaqBwQHw3w1TUC2AhBOtDA6AfwjZ9ZHKP4QkeQD+nRAtVAVIHY50Z+1vxabec30/IMg6x/U9gC/BzpW4FbY5MREn7CgHNju0ojJelO5UaAQQVV4DlkhrAhDD3GFPw12sD7AwJ+ytG83qAoxrwpFypOoBxJJxtEWsBZDNOFFfqCoAKuNcC60CgGPC2XKgFyBOcJQifQBxgK+RHoBZhreV5wFShr+JZwGyHmgl+AI43kA8gtcAMaNWK08AOKBehYcBnFCzwIMAjqhabzoEUEioW+YhADvUbuYBABfUL9hugEU0qDsA6NCihTsBnNCkFGwXQEpoU94HYEarRu4AWEGzetsBYEa7Jr4E2IqGbfYSwA4tm/kCYAVN2+wVoEPbRnsKsIjGdc8BXNC60Z4AFBJad+MTAGc0L+kZYED7ZvsGODEBR92/AZxwQSnoXwDLuKK7fQN8TeCKBn4DOA6nHDP4BuAN13S3xwD1uKaJDwEquKjhMcBmXNQmPQJwwVWVx4ABVzXzEUA9rmr4Ajh+VHDU6eu6Jf5JKy5rCyH+rvwAJXUuBeh7PBcAAAAASUVORK5CYII=);
+}
+
+.userRowNickname {
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 5px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.userRowStatus {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -webkit-transition: all .5s ease;
+  margin-left: 3px
+}
+
+.Guest {
+  color: #999;
+}
+
+.User {
+  color: #555;
+}
+
+.Admin {
+  color: #FF0000;
+  font-weight: bold;
+}
+
+.Moderator {
+  color: #00AA55;
+  font-weight: bold;
+}
+
+.Bot {
+  color:#00AAff;
+  font-weight:bold;
+}
+
+.Offline {
+  background: lighgrey;
+}
+
+.Online {
+  background: #28c432;
+}
+
+.Away {
+  background: #fdb024;
+}
+
+.Busy {
+  background: #fc4747;
+}
+
+.userRowAv {
+  padding: 6px 0 !important;
+  color: #AAA;
+  margin-right: -4px;
+}
+
+.status-tooltip .paper-tooltip:after {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+}
+</style>
+<script>
+    var validValue = function(value) {
+      if (value == !1 || value == '' || value === undefined || value === null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    Polymer({
+      is: 'user-row',
+      properties: {
+        cover: {
+          observer: '_changeUserCover',
+          type: String,
+          value: 'default'
+        },
+        avatar: {
+          observer: '_changeUserAvatar',
+          type: String,
+          value: 'default'
+        },
+        nickname: {
+          type: String,
+          value: ''
+        },
+        status: {
+          observer: '_changeUserStatus',
+          type: String,
+          value: 'online'
+        },
+        level: {
+          observer: '_changeUserLevel',
+          type: String,
+          value: 'user'
+        },
+        gender: {
+          observer: '_changeUserGender',
+          type: String,
+          value: 'unknown'
+        },
+        rippleEnabled: {
+        	type: Boolean,
+          value: true
+        }
+      },
+      _changeUserAvatar() {
+        this._userAvatar = 'https://chat.socializr.it/getMedia.php?type=avatar&id=' + this.avatar;
+      },
+      _changeUserLevel: function() {
+        this.async(function() {
+          switch (this.level) {
+            case 'admin':
+              this._nicknameClass = 'Admin';
+              this._userLevelString = 'Admin';
+              break;
+            case 'moderator':
+              this._nicknameClass = 'Moderator';
+              this._userLevelString = 'Moderatore';
+              break;
+            case 'user':
+              this._nicknameClass = 'User';
+              this._userLevelString = 'Utente';
+              break;
+            case 'guest':
+              this._nicknameClass = 'Guest';
+              this._userLevelString = 'Ospite';
+              break;
+            case 'bot':
+              this._nicknameClass = 'Bot';
+              this._userLevelString = 'Bot';
+              break;
+            default:
+              this._nicknameClass = 'User';
+              this._userLevelString = 'Utente';
+              break;
+          }
+        });
+      },
+      _changeUserStatus: function() {
+        this.async(function() {
+          var userStatus = this.status;
+          switch (userStatus) {
+            case 'offline':
+              this._statusString = 'Offline';
+              this._statusClass = 'Offline';
+              break;
+            case 'online':
+              this._statusClass = 'Online';
+              this._statusString = 'Online';
+              break;
+            case 'away':
+              this._statusClass = 'Away';
+              this._statusString = 'Non al computer';
+              break;
+            case 'busy':
+              this._statusClass = 'Busy';
+              this._statusString = this.gender == 'female' ? 'Occupata' : 'Occupato';
+              break;
+            default:
+              this._statusClass = 'Online';
+              this._statusString = 'Online';
+              break;
+          }
+        });
+      },
+      _changeUserGender: function() {
+        this.async(function() {
+        	switch (this.gender) {
+          	case 'male':
+            	this._genderClass = 'userRowGenderMale';
+            break;
+            case 'female':
+            	this._genderClass = 'userRowGenderFemale';
+            break;
+            default:
+            	this._genderClass = 'userRowGenderUnknown';
+            break;
+          }
+        });
+      }, 
+      _onAvEnter: function(){
+      	this.rippleEnabled = !1;
+      },
+      _onAvLeave: function(){
+      	this.rippleEnabled = !0;
+      },
+      _onAvClick: function(e,detail) {
+      	console.log(this.nickname + ' AV.click');
+      }
+    });
+
+</script>
+<div class="usersListContaianer">
+  <user-row nickname="Bot_" status="online" avatar="4b3dd7b72ec028b107d1f1d62446acdd" level="bot"></user-row>
+  <user-row nickname="Username_Unknown_Online" status="online"></user-row>
+  <user-row nickname="Username_Male_Busy" gender="male" status="away"></user-row>
+  <user-row nickname="Username_Male_Away" gender="male" status="away"></user-row>
+  <user-row nickname="Username_Female_Busy" gender="female" status="busy"></user-row>
+  <user-row nickname="Username_Female_Away" gender="female" status="busy"></user-row>
+</div>
+
+
+<!-- -->
+<!-- -->
