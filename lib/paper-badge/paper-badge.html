@@ -9,6 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../paper-styles/default-theme.html">
@@ -72,15 +73,19 @@ Custom property | Description | Default
         outline: none;
       }
 
+      :host([hidden]), [hidden] {
+        display: none !important;
+      }
+
       iron-icon {
         --iron-icon-width: 12px;
         --iron-icon-height: 12px;
       }
 
       .badge {
-        @apply(--layout);
-        @apply(--layout-center-center);
-        @apply(--paper-font-common-base);
+        @apply --layout;
+        @apply --layout-center-center;
+        @apply --paper-font-common-base;
 
         font-weight: normal;
         font-size: 11px;
@@ -89,11 +94,11 @@ Custom property | Description | Default
         margin-bottom: var(--paper-badge-margin-bottom, 0px);
         width: var(--paper-badge-width, 20px);
         height: var(--paper-badge-height, 20px);
-        background-color: var(--paper-badge-background, --accent-color);
+        background-color: var(--paper-badge-background, var(--accent-color));
         opacity: var(--paper-badge-opacity, 1.0);
         color: var(--paper-badge-text-color, white);
 
-        @apply(--paper-badge);
+        @apply --paper-badge;
       }
     </style>
 
@@ -108,8 +113,8 @@ Custom property | Description | Default
       is: 'paper-badge',
 
       hostAttributes: {
-        tabindex: '0',
-        role: 'status'
+        role: 'status',
+        tabindex: 0
       },
 
       behaviors: [
@@ -148,11 +153,32 @@ Custom property | Description | Default
         icon: {
           type: String,
           value: ''
+        },
+
+        _boundNotifyResize: {
+          type: Function,
+          value: function() {
+            return this.notifyResize.bind(this);
+          }
+        },
+
+        _boundUpdateTarget: {
+          type: Function,
+          value: function() {
+            return this._updateTarget.bind(this);
+          }
         }
       },
 
       attached: function() {
-        this._updateTarget();
+        // Polymer 2.x does not have this.offsetParent defined by attached
+        requestAnimationFrame(this._boundUpdateTarget);
+      },
+
+      attributeChanged: function (name) {
+        if (name === 'hidden') {
+          this.updatePosition();
+        }
       },
 
       _forChanged: function() {
@@ -170,7 +196,7 @@ Custom property | Description | Default
 
       _updateTarget: function() {
         this._target = this.target;
-        this.async(this.notifyResize, 1);
+        requestAnimationFrame(this._boundNotifyResize);
       },
 
       _computeIsIconBadge: function(icon) {
@@ -209,11 +235,9 @@ Custom property | Description | Default
        * you've manually done a page re-layout).
        */
       updatePosition: function() {
-        if (!this._target)
+        if (!this._target || !this.offsetParent) {
           return;
-
-        if (!this.offsetParent)
-          return;
+        }
 
         var parentRect = this.offsetParent.getBoundingClientRect();
         var targetRect = this._target.getBoundingClientRect();
