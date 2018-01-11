@@ -50,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         :host {
           display: block;
-          @apply --paper-font-common-base;
+          @apply(--paper-font-common-base);
         }
 
         app-header {
@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         .photoContent {
-          @apply --layout;
+          @apply(--layout);
           background-color: #ddd;
           position: relative;
           width: 300px;
@@ -82,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         .photoContent > iron-image {
-          @apply --layout-flex;
+          @apply(--layout-flex);
         }
 
         .photoContent > .detail {
@@ -100,8 +100,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         .searchInput {
-          @apply --layout-flex;
-          font-size: 18px;
+          @apply(--layout-flex);
+          font-size: 20px;
           padding: 10px 20px;
           border: none;
           background-color: rgba(255, 255, 255, 0.2);
@@ -202,7 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- this element loads more photos when the user scrolls down and reached the lower threshold -->
       <iron-scroll-threshold id="scrollTheshold"
         lower-threshold="500"
-        on-lower-threshold="_onLowerThreshold"
+        on-lower-threshold="_loadMorePhotos"
         scroll-target="document">
       </iron-scroll-threshold>
 
@@ -224,12 +224,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: 'c304f1096a06486d3c1e7ab271bf7f3f'
           },
 
-          photos: {
-            type: Array,
-            value: function() {
-              return [];
-            }
-          },
+          photos: Array,
 
           perPage: {
             type: Number,
@@ -238,7 +233,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           page: {
             type: Number,
-            value: 0
+            value: 1
           },
 
           searchText: {
@@ -277,20 +272,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.scrollTheshold.clearTriggers();
         },
 
-        _onLowerThreshold: function() {
-          this.debounce('_loadPhotos', this._loadMorePhotos, 60);
-        },
-
         _loadMorePhotos: function() {
           if (this.$.ajax.lastRequest) {
             this.$.ajax.lastRequest.abort();
           }
+
           this.page++;
           this.$.ajax.generateRequest();
         },
 
         _resetPhotos: function(searchText) {
-          this.page = 0;
+          this.page = 1;
           this.photos = [];
 
           if (searchText.trim() !== '') {

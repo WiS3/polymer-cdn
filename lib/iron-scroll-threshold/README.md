@@ -12,9 +12,7 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build status](https://travis-ci.org/PolymerElements/iron-scroll-threshold.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-scroll-threshold)
-
-_[Demo and API docs](https://elements.polymer-project.org/elements/iron-scroll-threshold)_
+_[Demo and API Docs](https://elements.polymer-project.org/elements/iron-scroll-threshold)_
 
 
 ##&lt;iron-scroll-threshold&gt;
@@ -59,9 +57,11 @@ triggered property.
 
 ```html
 <iron-scroll-threshold on-lower-threshold="loadMoreData">
-  <template is="dom-repeat" items="[[items]]">
-    <div>[[index]]</div>
-  </template>
+  <dom-repeat items="[[items]]">
+    <template>
+      <div>[[index]]</div>
+    </template>
+  </dom-repeat>
 </iron-scroll-threshold>
 ```
 

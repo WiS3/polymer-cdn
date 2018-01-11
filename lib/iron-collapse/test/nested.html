@@ -17,7 +17,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
 
+    <link rel="import" href="../../test-fixture/test-fixture.html">
     <link rel="import" href="../iron-collapse.html">
   </head>
   <body>
@@ -81,18 +83,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             outerCollapse.opened = true;
 
             assert.equal(innerCollapse.getBoundingClientRect().height, 100);
-          });
-
-          test('notifyResize triggered only on element\'s animations', function(done) {
-            var spy = sinon.spy(outerCollapse, 'notifyResize');
-
-            outerCollapse.opened = true;
-            innerCollapse.opened = true;
-
-            setTimeout(function() {
-              assert.equal(spy.callCount, 1, 'notifyResize called once');
-              done();
-            }, 400);
           });
 
         });

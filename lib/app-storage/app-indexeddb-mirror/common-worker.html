@@ -14,25 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     var WEB_WORKERS = {};
     var HAS_SHARED_WORKER = typeof SharedWorker !== 'undefined';
     var HAS_WEB_WORKER = typeof Worker !== 'undefined';
-    // NOTE(cdata): see http://www.2ality.com/2014/05/current-script.html
-    var currentScript = document._currentScript || document.currentScript ||
-        (function() {
-          var scripts = document.getElementsByTagName('script');
-          return scripts[scripts.length - 1];
-        })();
-
-    var BASE_URI = (function() {
-      // Polymer 2 baseURI polyfill for IE and Safari
-      if (Polymer.Element && window.HTMLImports && HTMLImports.importForElement) {
-        return HTMLImports.importForElement(
-            /** @type {!HTMLScriptElement} */(document.currentScript)).baseURI;
-      }
-      // Polymer 1 or no HTML Imports
-      currentScript = document._currentScript ? document._currentScript :
-          document.currentScript;
-      return currentScript.ownerDocument.baseURI;
-    })();
-
+    var BASE_URI = document._currentScript.ownerDocument.baseURI;
     var WORKER_SCOPE_URL =
         Polymer.ResolveUrl.resolveUrl('common-worker-scope.js', BASE_URI);
 
@@ -52,8 +34,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      *
      * @param {string} workerUrl The URL of the worker script to create a worker
      * instance with.
-     *
-     * @constructor
      */
     Polymer.CommonWorker = function CommonWorker (workerUrl) {
       if (HAS_SHARED_WORKER) {
@@ -61,7 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       } else if (HAS_WEB_WORKER) {
         if (!WEB_WORKERS.hasOwnProperty(workerUrl)) {
-          WEB_WORKERS[workerUrl] =
+          WEB_WORKERS.workerUrl =
               new Worker(WORKER_SCOPE_URL + '?' + workerUrl);
         }
 
@@ -72,11 +52,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       this.channel = new MessageChannel();
-      this.webWorker = WEB_WORKERS[workerUrl];
+      this.webWorker = WEB_WORKERS.workerUrl;
 
       if (this.webWorker) {
         this.webWorker.postMessage({
-          'type': 'common-worker-connect'
+          type: 'common-worker-connect'
         }, [this.channel.port2]);
       }
     }
@@ -96,11 +76,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * A proxy method that forwards all calls to the backing `WebWorker`
        * instance.
        *
-       * @param {String|string|undefined} eventType The event to listen for
-       * @param {Function} listenerFunction The function to be attached to the event
-       * @param {Object=} options addEventListener Options object
+       * @param {...} addEventListenerArgs The arguments to call the same method
+       * on the `WebWorker` with.
        */
-      addEventListener: function(eventType, listenerFunction, options) {
+      addEventListener: function() {
         if (this.webWorker) {
           return this.webWorker.addEventListener.apply(this.webWorker, arguments);
         }
@@ -110,10 +89,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * A proxy method that forwards all calls to the backing `WebWorker`
        * instance.
        *
-       * @param {...*} removeEventListenerArgs The arguments to call the same
+       * @param {...} removeEventListenerArgs The arguments to call the same
        * method on the `WebWorker` with.
        */
-      removeEventListener: function(removeEventListenerArgs) {
+      removeEventListener: function() {
         if (this.webWorker) {
           return this.webWorker
               .removeEventListener.apply(this.webWorker, arguments);

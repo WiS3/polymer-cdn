@@ -50,7 +50,6 @@ Custom property | Description | Default
 `--paper-slider-disabled-knob-color` | The disabled knob color | `--paper-grey-400`
 `--paper-slider-pin-color` | The pin color | `--google-blue-700`
 `--paper-slider-font-color` | The pin's text color | `#fff`
-`--paper-slider-markers-color` | The snaps markers color | `#000`
 `--paper-slider-disabled-active-color` | The disabled progress bar color | `--paper-grey-400`
 `--paper-slider-disabled-secondary-color` | The disabled secondary progress bar color | `--paper-grey-400`
 `--paper-slider-knob-start-color` | The fill color of the knob at the far left | `transparent`
@@ -58,7 +57,6 @@ Custom property | Description | Default
 `--paper-slider-pin-start-color` | The color of the pin at the far left | `--paper-grey-400`
 `--paper-slider-height` | Height of the progress bar | `2px`
 `--paper-slider-input` | Mixin applied to the input in editable mode | `{}`
-`--paper-slider-input-container-input` | Mixin applied to the paper-input-container-input in editable mode | `{}`
 
 @group Paper Elements
 @element paper-slider
@@ -70,9 +68,9 @@ Custom property | Description | Default
   <template strip-whitespace>
     <style>
       :host {
-        @apply --layout;
-        @apply --layout-justified;
-        @apply --layout-center;
+        @apply(--layout);
+        @apply(--layout-justified);
+        @apply(--layout-center);
         width: 200px;
         cursor: default;
         -webkit-user-select: none;
@@ -80,11 +78,10 @@ Custom property | Description | Default
         -ms-user-select: none;
         user-select: none;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        --paper-progress-active-color: var(--paper-slider-active-color, var(--google-blue-700));
-        --paper-progress-secondary-color: var(--paper-slider-secondary-color, var(--google-blue-300));
-        --paper-progress-disabled-active-color: var(--paper-slider-disabled-active-color, var(--paper-grey-400));
-        --paper-progress-disabled-secondary-color: var(--paper-slider-disabled-secondary-color, var(--paper-grey-400));
-        --calculated-paper-slider-height: var(--paper-slider-height, 2px);
+        --paper-progress-active-color: var(--paper-slider-active-color, --google-blue-700);
+        --paper-progress-secondary-color: var(--paper-slider-secondary-color, --google-blue-300);
+        --paper-progress-disabled-active-color: var(--paper-slider-disabled-active-color, --paper-grey-400);
+        --paper-progress-disabled-secondary-color: var(--paper-slider-disabled-secondary-color, --paper-grey-400);
       }
 
       /* focus shows the ripple */
@@ -92,40 +89,12 @@ Custom property | Description | Default
         outline: none;
       }
 
-      /** 
-       * NOTE(keanulee): Though :host-context is not universally supported, some pages
-       * still rely on paper-slider being flipped when dir="rtl" is set on body. For full
-       * compatability, dir="rtl" must be explicitly set on paper-slider.
-       */
-      :dir(rtl) #sliderContainer {
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-      }
-
-      /** 
-       * NOTE(keanulee): This is separate from the rule above because :host-context may
-       * not be recognized.
-       */
-      :host([dir="rtl"]) #sliderContainer {
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-      }
-
-      /** 
-       * NOTE(keanulee): Needed to override the :host-context rule (where supported)
-       * to support LTR sliders in RTL pages.
-       */
-      :host([dir="ltr"]) #sliderContainer {
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
-      }
-
       #sliderContainer {
         position: relative;
         width: 100%;
-        height: calc(30px + var(--calculated-paper-slider-height));
-        margin-left: calc(15px + var(--calculated-paper-slider-height)/2);
-        margin-right: calc(15px + var(--calculated-paper-slider-height)/2);
+        height: calc(30px + var(--paper-slider-height, 2px));
+        margin-left: calc(15px + var(--paper-slider-height, 2px)/2);
+        margin-right: calc(15px + var(--paper-slider-height, 2px)/2);
       }
 
       #sliderContainer:focus {
@@ -147,7 +116,7 @@ Custom property | Description | Default
       }
 
       .ring > .bar-container {
-        left: calc(5px + var(--calculated-paper-slider-height)/2);
+        left: calc(5px + var(--paper-slider-height, 2px)/2);
         transition: left 0.18s ease;
       }
 
@@ -156,30 +125,30 @@ Custom property | Description | Default
       }
 
       .ring.expand:not(.pin) > .bar-container {
-        left: calc(8px + var(--calculated-paper-slider-height)/2);
+        left: calc(8px + var(--paper-slider-height, 2px)/2);
       }
 
       #sliderBar {
         padding: 15px 0;
         width: 100%;
         background-color: var(--paper-slider-bar-color, transparent);
-        --paper-progress-container-color: var(--paper-slider-container-color, var(--paper-grey-400));
-        --paper-progress-height: var(--calculated-paper-slider-height);
+        --paper-progress-container-color: var(--paper-slider-container-color, --paper-grey-400);
+        --paper-progress-height: var(--paper-slider-height, 2px);
       }
 
       .slider-markers {
         position: absolute;
         top: calc(14px + var(--paper-slider-height,2px)/2);
-        height: var(--calculated-paper-slider-height);
+        height: var(--paper-slider-height, 2px);
         left: 0;
         right: -1px;
         box-sizing: border-box;
         pointer-events: none;
-        @apply --layout-horizontal;
+        @apply(--layout-horizontal);
       }
 
       .slider-marker {
-        @apply --layout-flex;
+        @apply(--layout-flex);
       }
       .slider-markers::after,
       .slider-marker::after {
@@ -187,43 +156,43 @@ Custom property | Description | Default
         display: block;
         margin-left: -1px;
         width: 2px;
-        height: var(--calculated-paper-slider-height);
+        height: 2px;
         border-radius: 50%;
-        background-color: var(--paper-slider-markers-color, #000);
+        background-color: black;
       }
 
-      .slider-knob {
+      #sliderKnob {
         position: absolute;
         left: 0;
         top: 0;
-        margin-left: calc(-15px - var(--calculated-paper-slider-height)/2);
-        width: calc(30px + var(--calculated-paper-slider-height));
-        height: calc(30px + var(--calculated-paper-slider-height));
+        margin-left: calc(-15px - var(--paper-slider-height, 2px)/2);
+        width: calc(30px + var(--paper-slider-height, 2px));
+        height: calc(30px + var(--paper-slider-height, 2px));
       }
 
-      .transiting > .slider-knob {
+      .transiting > #sliderKnob {
         transition: left 0.08s ease;
       }
 
-      .slider-knob:focus {
+      #sliderKnob:focus {
         outline: none;
       }
 
-      .slider-knob.dragging {
+      #sliderKnob.dragging {
         transition: none;
       }
 
-      .snaps > .slider-knob.dragging {
+      .snaps > #sliderKnob.dragging {
         transition: -webkit-transform 0.08s ease;
         transition: transform 0.08s ease;
       }
 
-      .slider-knob-inner {
+      #sliderKnobInner {
         margin: 10px;
         width: calc(100% - 20px);
         height: calc(100% - 20px);
-        background-color: var(--paper-slider-knob-color, var(--google-blue-700));
-        border: 2px solid var(--paper-slider-knob-color, var(--google-blue-700));
+        background-color: var(--paper-slider-knob-color, --google-blue-700);
+        border: 2px solid var(--paper-slider-knob-color, --google-blue-700);
         border-radius: 50%;
 
         -moz-box-sizing: border-box;
@@ -235,21 +204,21 @@ Custom property | Description | Default
         transition-timing-function: ease;
       }
 
-      .expand:not(.pin) > .slider-knob > .slider-knob-inner {
+      .expand:not(.pin) > #sliderKnob > #sliderKnobInner {
         -webkit-transform: scale(1.5);
         transform: scale(1.5);
       }
 
-      .ring > .slider-knob > .slider-knob-inner {
+      .ring > #sliderKnob > #sliderKnobInner {
         background-color: var(--paper-slider-knob-start-color, transparent);
-        border: 2px solid var(--paper-slider-knob-start-border-color, var(--paper-grey-400));
+        border: 2px solid var(--paper-slider-knob-start-border-color, --paper-grey-400);
       }
 
-      .slider-knob-inner::before {
-        background-color: var(--paper-slider-pin-color, var(--google-blue-700));
+      #sliderKnobInner::before {
+        background-color: var(--paper-slider-pin-color, --google-blue-700);
       }
 
-      .pin > .slider-knob > .slider-knob-inner::before {
+      .pin > #sliderKnob > #sliderKnobInner::before {
         content: "";
         position: absolute;
         top: 0;
@@ -263,22 +232,22 @@ Custom property | Description | Default
         transform: rotate(-45deg) scale(0) translate(0);
       }
 
-      .slider-knob-inner::before,
-      .slider-knob-inner::after {
+      #sliderKnobInner::before,
+      #sliderKnobInner::after {
         transition: -webkit-transform .18s ease, background-color .18s ease;
         transition: transform .18s ease, background-color .18s ease;
       }
 
-      .pin.ring > .slider-knob > .slider-knob-inner::before {
-        background-color: var(--paper-slider-pin-start-color, var(--paper-grey-400));
+      .pin.ring > #sliderKnob > #sliderKnobInner::before {
+        background-color: var(--paper-slider-pin-start-color, --paper-grey-400);
       }
 
-      .pin.expand > .slider-knob > .slider-knob-inner::before {
+      .pin.expand > #sliderKnob > #sliderKnobInner::before {
         -webkit-transform: rotate(-45deg) scale(1) translate(17px, -17px);
         transform: rotate(-45deg) scale(1) translate(17px, -17px);
       }
 
-      .pin > .slider-knob > .slider-knob-inner::after {
+      .pin > #sliderKnob > #sliderKnobInner::after {
         content: attr(value);
         position: absolute;
         top: 0;
@@ -294,7 +263,7 @@ Custom property | Description | Default
         transform: scale(0) translate(0);
       }
 
-      .pin.expand > .slider-knob > .slider-knob-inner::after {
+      .pin.expand > #sliderKnob > #sliderKnobInner::after {
         -webkit-transform: scale(1) translate(0, -17px);
         transform: scale(1) translate(0, -17px);
       }
@@ -305,9 +274,8 @@ Custom property | Description | Default
         overflow: hidden;
         --paper-input-container-input: {
           text-align: center;
-          @apply --paper-slider-input-container-input;
         };
-        @apply --paper-slider-input;
+        @apply(--paper-slider-input);
       }
 
       /* disabled state */
@@ -315,20 +283,20 @@ Custom property | Description | Default
         pointer-events: none;
       }
 
-      .disabled > .slider-knob > .slider-knob-inner {
-        background-color: var(--paper-slider-disabled-knob-color, var(--paper-grey-400));
-        border: 2px solid var(--paper-slider-disabled-knob-color, var(--paper-grey-400));
+      .disabled > #sliderKnob > #sliderKnobInner {
+        background-color: var(--paper-slider-disabled-knob-color, --paper-grey-400);
+        border: 2px solid var(--paper-slider-disabled-knob-color, --paper-grey-400);
         -webkit-transform: scale3d(0.75, 0.75, 1);
         transform: scale3d(0.75, 0.75, 1);
       }
 
-      .disabled.ring > .slider-knob > .slider-knob-inner {
+      .disabled.ring > #sliderKnob > #sliderKnobInner {
         background-color: var(--paper-slider-knob-start-color, transparent);
-        border: 2px solid var(--paper-slider-knob-start-border-color, var(--paper-grey-400));
+        border: 2px solid var(--paper-slider-knob-start-border-color, --paper-grey-400);
       }
 
       paper-ripple {
-        color: var(--paper-slider-knob-color, var(--google-blue-700));
+        color: var(--paper-slider-knob-color, --google-blue-700);
       }
     </style>
 
@@ -359,12 +327,11 @@ Custom property | Description | Default
       </template>
 
       <div id="sliderKnob"
-        class="slider-knob"
         on-down="_knobdown"
         on-up="_resetKnob"
         on-track="_onTrack"
         on-transitionend="_knobTransitionEnd">
-          <div class="slider-knob-inner" value$="[[immediateValue]]"></div>
+          <div id="sliderKnobInner" value$="[[immediateValue]]"></div>
       </div>
     </div>
 
@@ -471,8 +438,7 @@ Custom property | Description | Default
         dragging: {
           type: Boolean,
           value: false,
-          readOnly: true,
-          notify: true
+          readOnly: true
         },
 
         transiting: {
@@ -484,9 +450,7 @@ Custom property | Description | Default
         markers: {
           type: Array,
           readOnly: true,
-          value: function() {
-              return [];
-          }
+          value: []
         },
       },
 
@@ -503,10 +467,8 @@ Custom property | Description | Default
       },
 
       keyBindings: {
-        'left': '_leftKey',
-        'right': '_rightKey',
-        'down pagedown home': '_decrementKey',
-        'up pageup end': '_incrementKey'
+        'left down pagedown home': '_decrementKey',
+        'right up pageup end': '_incrementKey'
       },
 
       /**
@@ -530,16 +492,16 @@ Custom property | Description | Default
         this.setAttribute('aria-valuemax', max);
         this.setAttribute('aria-valuenow', value);
 
-        this._positionKnob(this._calcRatio(value) * 100);
+        this._positionKnob(this._calcRatio(value));
       },
 
       _valueChanged: function() {
-        this.fire('value-change', {composed: true});
+        this.fire('value-change');
       },
 
       _immediateValueChanged: function() {
         if (this.dragging) {
-          this.fire('immediate-value-change', {composed: true});
+          this.fire('immediate-value-change');
         } else {
           this.value = this.immediateValue;
         }
@@ -560,17 +522,17 @@ Custom property | Description | Default
 
       _positionKnob: function(ratio) {
         this._setImmediateValue(this._calcStep(this._calcKnobPosition(ratio)));
-        this._setRatio(this._calcRatio(this.immediateValue) * 100);
+        this._setRatio(this._calcRatio(this.immediateValue));
 
-        this.$.sliderKnob.style.left = this.ratio + '%';
+        this.$.sliderKnob.style.left = (this.ratio * 100) + '%';
         if (this.dragging) {
-          this._knobstartx = (this.ratio * this._w) / 100;
+          this._knobstartx = this.ratio * this._w;
           this.translate3d(0, 0, 0, this.$.sliderKnob);
         }
       },
 
       _calcKnobPosition: function(ratio) {
-        return (this.max - this.min) * ratio / 100 + this.min;
+        return (this.max - this.min) * ratio + this.min;
       },
 
       _onTrack: function(event) {
@@ -589,9 +551,8 @@ Custom property | Description | Default
       },
 
       _trackStart: function(event) {
-        this._setTransiting(false);
         this._w = this.$.sliderBar.offsetWidth;
-        this._x = this.ratio * this._w / 100;
+        this._x = this.ratio * this._w;
         this._startx = this._x;
         this._knobstartx = this._startx;
         this._minx = - this._startx;
@@ -600,17 +561,15 @@ Custom property | Description | Default
         this._setDragging(true);
       },
 
-      _trackX: function(event) {
+      _trackX: function(e) {
         if (!this.dragging) {
-          this._trackStart(event);
+          this._trackStart(e);
         }
 
-        var direction = this._isRTL ? -1 : 1;
-        var dx = Math.min(
-            this._maxx, Math.max(this._minx, event.detail.dx * direction));
+        var dx = Math.min(this._maxx, Math.max(this._minx, e.detail.dx));
         this._x = this._startx + dx;
 
-        var immediateValue = this._calcStep(this._calcKnobPosition(this._x / this._w * 100));
+        var immediateValue = this._calcStep(this._calcKnobPosition(this._x / this._w));
         this._setImmediateValue(immediateValue);
 
         // update knob's position
@@ -628,7 +587,7 @@ Custom property | Description | Default
 
         s.transform = s.webkitTransform = '';
 
-        this.fire('change', {composed: true});
+        this.fire('change');
       },
 
       _knobdown: function(event) {
@@ -644,10 +603,7 @@ Custom property | Description | Default
       _bardown: function(event) {
         this._w = this.$.sliderBar.offsetWidth;
         var rect = this.$.sliderBar.getBoundingClientRect();
-        var ratio = (event.detail.x - rect.left) / this._w * 100;
-        if (this._isRTL) {
-          ratio = 100 - ratio;
-        }
+        var ratio = (event.detail.x - rect.left) / this._w;
         var prevRatio = this.ratio;
 
         this._setTransiting(true);
@@ -665,7 +621,7 @@ Custom property | Description | Default
         }
 
         this.async(function() {
-          this.fire('change', {composed: true});
+          this.fire('change');
         });
 
         // cancel selection
@@ -688,9 +644,6 @@ Custom property | Description | Default
         var steps = Math.round((max - min) / this.step);
         if (steps > maxMarkers) {
           steps = maxMarkers;
-        }
-        if (steps < 0 || !isFinite(steps)) {
-          steps = 0;
         }
         this._setMarkers(new Array(steps));
       },
@@ -715,27 +668,6 @@ Custom property | Description | Default
         });
       },
 
-      get _isRTL() {
-        if (this.__isRTL === undefined) {
-          this.__isRTL = window.getComputedStyle(this)['direction'] === 'rtl';
-        }
-        return this.__isRTL;
-      },
-
-      _leftKey: function(event) {
-        if (this._isRTL)
-          this._incrementKey(event);
-        else
-          this._decrementKey(event);
-      },
-
-      _rightKey: function(event) {
-        if (this._isRTL)
-          this._decrementKey(event);
-        else
-          this._incrementKey(event);
-      },
-
       _incrementKey: function(event) {
         if (!this.disabled) {
           if (event.detail.key === 'end') {
@@ -744,7 +676,6 @@ Custom property | Description | Default
             this.increment();
           }
           this.fire('change');
-          event.preventDefault();
         }
       },
 
@@ -756,13 +687,12 @@ Custom property | Description | Default
             this.decrement();
           }
           this.fire('change');
-          event.preventDefault();
         }
       },
 
       _changeValue: function(event) {
         this.value = event.target.value;
-        this.fire('change', {composed: true});
+        this.fire('change');
       },
 
       _inputKeyDown: function(event) {
@@ -804,7 +734,7 @@ Custom property | Description | Default
      * Fired when the slider's immediateValue changes. Only occurs while the
      * user is dragging.
      *
-     * To detect changes to immediateValue that happen for any input (i.e.
+     * To detect changes to immediateValue that happen for any input (i.e.                                                          
      * dragging, tapping, clicking, etc.) listen for immediate-value-changed
      * instead.
      *

@@ -1,8 +1,23 @@
+
+<!---
+
+This README is automatically generated from the comments in these files:
+iron-a11y-keys.html
+
+Edit those files, and our readme bot will duplicate them over here!
+Edit this file, and the bot will squash your changes :)
+
+The bot does some handling of markdown. Please file a bug if it does the wrong
+thing! https://github.com/PolymerLabs/tedium/issues
+
+-->
+
 [![Build status](https://travis-ci.org/PolymerElements/iron-a11y-keys.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-a11y-keys)
 
 _[Demo and API docs](https://elements.polymer-project.org/elements/iron-a11y-keys)_
 
-## &lt;iron-a11y-keys&gt;
+
+##&lt;iron-a11y-keys&gt;
 
 `iron-a11y-keys` provides a cross-browser interface for processing
 keyboard commands. The interface adheres to [WAI-ARIA best
@@ -41,11 +56,11 @@ properties: {
     notify: true,
   },
   target: {
-    type: Object
+    type: Object,
+    value: function() {
+      return this.$.input;
+    }
   },
-},
-ready: function() {
-  this.target = this.$.input;
 },
 onEnter: function() {
   console.log(this.userInput);
@@ -82,8 +97,7 @@ fnkey = ? f1 through f12 ? ;
 arrow = "up" | "down" | "left" | "right" ;
 key = "tab" | "esc" | "space" | "*" | "pageup" | "pagedown" |
       "home" | "end" | arrow | ascii | fnkey;
-event = "keypress" | "keydown" | "keyup";
-keycombo = { modifier, "+" }, key, [ ":", event ] ;
+keycombo = { modifier, "+" }, key ;
 keys = keycombo, { " ", keycombo } ;
 ```
 
@@ -122,3 +136,5 @@ to methods. The `increment` method should move the slider a set amount
 toward the maximum value. `decrement` should move the slider a set amount
 toward the minimum value. `setMin` should move the slider to the minimum
 value. `setMax` should move the slider to the maximum value.
+
+

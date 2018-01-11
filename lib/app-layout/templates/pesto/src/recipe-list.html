@@ -47,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       font-size: 16px;
     }
 
-    [main-title] {
+    [title] {
       position: absolute;
       top: -120px;
       bottom: 0;
@@ -126,7 +126,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-size: 60px;
       }
 
-      [main-title] {
+      [title] {
         top: -60px;
         background-image: url('//app-layout-assets.appspot.com/assets/pesto/logo_m.png');
         background-size: 90px;
@@ -146,13 +146,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- main panel -->
     <app-header-layout>
 
-      <app-header effects="resize-title" condenses fixed shadow slot="header">
+      <app-header effects="resize-title" condenses fixed shadow>
         <app-toolbar class="top-toolbar">
-          <slot name="drawer-toggle"></slot>
+          <content select="[drawer-toggle]"></content>
           <div condensed-title></div>
         </app-toolbar>
         <app-toolbar class="bottom-toolbar">
-          <div main-title></div>
+          <div title></div>
         </app-toolbar>
       </app-header>
 
@@ -166,7 +166,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </div>
             </paper-card>
           </a><!-- No empty text node
-      --></template>
+        --></template>
       </div>
 
     </app-header-layout>

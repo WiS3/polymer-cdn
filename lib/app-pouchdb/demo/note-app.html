@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <na-toolbar></na-toolbar>
 
-    <app-pouchdb-conflict-resolution
+    <app-pouchdb-confict-resolution
         strategy="firstWriteWins">
     </app-pouchdb-conflict-resolution>
 
@@ -69,7 +69,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       Polymer({
         is: 'note-app',
 
-        behaviors: [ Polymer.NoteAppBehavior ]
+        behaviors: [
+          Polymer.NoteAppBehavior
+        ]
       });
     })();
   </script>
